@@ -40,6 +40,11 @@
       width: 100%;
       max-width: 400px;
       height: auto;
+      visibility: hidden;
+    }
+
+    .container img.ready {
+      visibility: visible;
     }
 
     .btn {
@@ -196,18 +201,36 @@
       }
     }
 
-    // Movimiento aleatorio del botón NO
-    document.querySelector("#index img").src = "https://i.pinimg.com/736x/00/db/84/00db841874f89101b7264822e58d7d25.jpg";
-    document.querySelector("#no1 img").src = "https://i.pinimg.com/736x/55/1b/d3/551bd3fa300d46e9b845662c2e1ed80f.jpg";
-    document.querySelector("#no2 img").src = "https://i.pinimg.com/1200x/cf/32/63/cf326389417cc6ae01ac35ec5fbc2ce2.jpg";
-    document.querySelector("#si img").src = "https://i.pinimg.com/736x/0a/92/7a/0a927aa5179de1b89c4332a1fbf47267.jpg";
+    // Cargar las imágenes nuevas sin mostrar las imágenes incrustadas anteriores.
+    function setImage(id, src) {
+      const image = document.querySelector(`#${id} img`);
+      image.onload = () => image.classList.add("ready");
+      image.src = src;
+    }
+
+    setImage("index", "https://i.pinimg.com/736x/00/db/84/00db841874f89101b7264822e58d7d25.jpg");
+    setImage("no1", "https://i.pinimg.com/736x/55/1b/d3/551bd3fa300d46e9b845662c2e1ed80f.jpg");
+    setImage("no2", "https://i.pinimg.com/1200x/cf/32/63/cf326389417cc6ae01ac35ec5fbc2ce2.jpg");
+    setImage("si", "https://i.pinimg.com/736x/0a/92/7a/0a927aa5179de1b89c4332a1fbf47267.jpg");
     const btnNo = document.getElementById("btn-random");
-    btnNo.addEventListener("mouseenter", function () {
+
+    function moveNoButton(event) {
+      if (event.type === "touchstart") event.preventDefault();
+
+      const margin = 16;
+      const buttonWidth = btnNo.offsetWidth;
+      const buttonHeight = btnNo.offsetHeight;
+      const maxLeft = Math.max(margin, window.innerWidth - buttonWidth - margin);
+      const maxTop = Math.max(margin, window.innerHeight - buttonHeight - margin);
+
       btnNo.style.position = "absolute";
       btnNo.style.fontWeight = "bolder";
-      btnNo.style.top = Math.floor(Math.random() * 90 + 5) + "%";
-      btnNo.style.left = Math.floor(Math.random() * 90 + 5) + "%";
-    });
+      btnNo.style.left = Math.floor(Math.random() * maxLeft) + "px";
+      btnNo.style.top = Math.floor(Math.random() * maxTop) + "px";
+    }
+
+    btnNo.addEventListener("mouseenter", moveNoButton);
+    btnNo.addEventListener("touchstart", moveNoButton, { passive: false });
   </script>
 </body>
 </html>
